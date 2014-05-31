@@ -1,6 +1,7 @@
 package userapiclient
 
 import (
+	"bytes"
 	"testing"
 )
 
@@ -26,10 +27,10 @@ func TestServerLogin(t *testing.T) {
 	}
 }
 
-func TestCheckToken(t *testing.T) {
+func TestCheckTokenFail(t *testing.T) {
 	// t.Skip("Skipping TestCheckToken")
 	ac := createClient()
-	a, err := ac.CheckToken("123", nil) // this one should fail
+	a, err := ac.CheckToken("123") // this one should fail
 	if err == nil {
 		t.Log(a)
 		t.Fail()
@@ -37,13 +38,37 @@ func TestCheckToken(t *testing.T) {
 	t.Log(err)
 }
 
-func TestLogin(t *testing.T) {
+func TestLoginFail(t *testing.T) {
 	// t.Skip("Skipping TestLogin")
+	var w bytes.Buffer
 	ac := createClient()
-	a, err := ac.Login("b@b.com", "bbb", nil)
+	ud, err := ac.Login("b@a.com", "ababb")
 	if err == nil {
-		t.Log(a)
+		t.Log(ud)
 		t.Fail()
 	}
+	t.Log(w.String())
+	t.Log(err)
+}
+
+func TestLoginSucceed(t *testing.T) {
+	// t.Skip("Skipping TestLoginSucceed")
+	ac := createClient()
+	ud, err := ac.Login("a@a.com", "aaa")
+	if err != nil {
+		t.Fail()
+	}
+	t.Log(ud)
+	t.Log(err)
+}
+
+func TestCheckTokenSucceed(t *testing.T) {
+	// t.Skip("Skipping TestCheckToken")
+	ac := createClient()
+	td, err := ac.CheckToken(ac.ClientToken)
+	if err != nil {
+		t.Fail()
+	}
+	t.Log(td)
 	t.Log(err)
 }
